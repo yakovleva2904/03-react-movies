@@ -19,3 +19,5 @@ export default async function searchFunc (name: string) {
     });
     return response.data.results;
 };
+
+console.log(import.meta.env.VITE_TMDB_TOKEN)
