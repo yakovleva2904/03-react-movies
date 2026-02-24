@@ -1,6 +1,6 @@
 import SearchBar from '../SearchBar/SearchBar.tsx';
 import css from './App.module.css';
-import searchFunc from '../../services/movieService.ts'
+import fetchMovies from '../../services/movieService.ts';
 import toast, { Toaster } from 'react-hot-toast';
 import { useState } from 'react';
 import type { Movie } from '../../types/movie.ts';
@@ -12,32 +12,36 @@ import MovieModal from '../MovieModal/MovieModal.tsx';
 
 export default function App() {
 
-  const [films, setFilms] = useState<Movie[]>([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setSelectedMovie(null);
-  };
+//   const openModal = () => setIsModalOpen(true);
+//   const closeModal = () => {
+//     setIsModalOpen(false);
+//     setSelectedMovie(null);
+    //   };
+    const closeModal = () => {
+        setSelectedMovie(null);
+    }
 
   const handleSelect = (movie: Movie) => {
     setSelectedMovie(movie);
-    openModal();
+    // openModal();
   };
 
   const submitHandle = async (name: string) => {
     try {
       setIsLoading(true);
       setIsError(false);
-      const data = await searchFunc(name);
+      const data = await fetchMovies(name);
       if (data.length === 0) {
-      toast.error("No movies found for your request.");
+          toast.error("No movies found for your request.");
+          return;
     };
-    setFilms(data);
+    setMovies(data);
     } catch {
       setIsError(true);
     } finally {
@@ -50,11 +54,11 @@ export default function App() {
     <>
       <div className={css.App}>
         <SearchBar onSubmit={submitHandle} />
-        <MovieGrid movies={films} onSelect={handleSelect}/>
+        <MovieGrid movies={movies} onSelect={handleSelect}/>
         <Toaster />
         {isLoading && <Loader />}
         {isError && <ErrorMessage />}
-        {isModalOpen && <MovieModal movie={selectedMovie} onClose={closeModal}/>}
+        {selectedMovie && <MovieModal movie={selectedMovie} onClose={closeModal}/>}
       </div>
     </>
   )

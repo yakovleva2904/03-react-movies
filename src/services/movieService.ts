@@ -7,15 +7,27 @@ interface SearchResponse {
   total_pages: number;
   total_results: number;
 }
-
-export default async function searchFunc (name: string) {
-    const response = await axios.get<SearchResponse>('https://api.themoviedb.org/3/search/movie', {
-        params: {
-           query: name,
-        },
-        headers: {
-          Authorization: `Bearer ${myKey}`,
-        },
-    });
-    return response.data.results;
+const fetchMovies = async (name: string): Promise<Movie[]> => {
+  const response = await axios.get<SearchResponse>('https://api.themoviedb.org/3/search/movie', {
+    params: {
+      query: name,
+    },
+    headers: {
+      Authorization: `Bearer ${myKey}`,
+    },
+  });
+  return response.data.results;
 };
+export default fetchMovies;
+
+// export default async function fetchMovies (name: string) {
+//     const response = await axios.get<SearchResponse>('https://api.themoviedb.org/3/search/movie', {
+//         params: {
+//            query: name,
+//         },
+//         headers: {
+//           Authorization: `Bearer ${myKey}`,
+//         },
+//     });
+//     return response.data.results;
+// };
