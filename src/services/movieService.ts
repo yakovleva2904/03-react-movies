@@ -14,8 +14,8 @@ export default async function searchFunc (name: string) {
            query: name,
         },
         headers: {
-          Authorization: `Bearer ${myKey}`
-        }
+          Authorization: `Bearer ${myKey}`,
+        },
     });
     return response.data.results;
 };
